@@ -4,6 +4,10 @@
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background-color: #0f172c; /* same as navbar */
-  color: #e2e8f0;
+  background-color: #0f172a; 
+  color: #e5e7eb; 
+}
+
+html {
+  scroll-behavior: smooth;
 }
