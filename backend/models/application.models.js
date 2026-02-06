@@ -2,15 +2,59 @@ const mongoose = require("mongoose");
 
 const applicationSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    company: String,
-    role: String,
-    type: String,
-    skills: String,
-    status: String,
-    link: String,
-    date: String,
-    notes: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    company: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: [
+        "Intern",
+        "Job",
+        "Remote",
+        "Freelance",
+        "Hybrid",
+        "Other",
+      ],
+    },
+    skills: {
+      type: String,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: [
+        "Applied",
+        "Resume Shortlisted",
+        "OA Done",
+        "Interview Scheduled",
+        "Interview Done",
+        "Rejected",
+        "Other",
+      ],
+    },
+    applicationLink: {
+      type: String,
+    },
+    notes: {
+      type: String,
+    },
+    appliedDate: {
+      type: Date,
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -15,19 +15,19 @@ exports.signup = async ({ name, email, password }) => {
   if (exists && exists.isVerified) throw new Error("User already exists");
 
   if (exists && !exists.isVerified) {
-  const otp = generateOTP();
-  exists.otp = otp;
-  exists.otpExpires = Date.now() + 10 * 60 * 1000;
-  await exists.save();
+    const otp = generateOTP();
+    exists.otp = otp;
+    exists.otpExpires = Date.now() + 10 * 60 * 1000;
+    await exists.save();
 
-  await sendOTPEmail(email, otp);
-  return { email };
-}
+    await sendOTPEmail(email, otp);
+    return { email };
+  }
 
   const hashed = await bcrypt.hash(password, 10);
   const otp = generateOTP();
-  
- 
+
+
   const user = await User.create({
     name,
     email,
@@ -35,11 +35,11 @@ exports.signup = async ({ name, email, password }) => {
     otp,
     otpExpires: Date.now() + 10 * 60 * 1000, // 10 min
   });
- 
-  
-     await sendOTPEmail(email, otp);
+
+
+  await sendOTPEmail(email, otp);
   return { email: user.email, otp };
-  
+
 };
 
 exports.verifyOtp = async ({ email, otp }) => {
@@ -54,7 +54,7 @@ exports.verifyOtp = async ({ email, otp }) => {
   user.otpExpires = null;
   await user.save();
 
-  return generateToken(user._id);
+  return { token: generateToken(user._id), user: { name: user.name, email: user.email } };
 };
 
 exports.login = async ({ email, password }) => {
@@ -66,5 +66,22 @@ exports.login = async ({ email, password }) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) throw new Error("Invalid credentials");
 
-  return generateToken(user._id);
+  return { token: generateToken(user._id), user: { name: user.name, email: user.email } };
+};
+
+
+exports.resendOtp = async ({ email }) => {
+  const user = await User.findOne({ email });
+
+  if (!user) throw new Error("User not found");
+  if (user.isVerified) throw new Error("Account already verified");
+
+  const otp = generateOTP();
+  user.otp = otp;
+  user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+  await user.save();
+
+  await sendOTPEmail(email, otp);
+
+  return { email, message: "OTP resent successfully" };
 };

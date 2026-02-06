@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, signupUser, verifyOtp } from "../../services/api";
+import { loginUser, signupUser, verifyOtp, resendOtp } from "../../services/api";
 
 function AuthOverlay({ onClose }) {
   const [mode, setMode] = useState("login"); // login | signup | otp | forgot
@@ -13,6 +13,9 @@ function AuthOverlay({ onClose }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -31,6 +34,7 @@ function AuthOverlay({ onClose }) {
       });
 
       localStorage.setItem("token", res.token);
+      localStorage.setItem("user", JSON.stringify(res.user));
       onClose();
       navigate("/dashboard");
     } catch (err) {
@@ -70,6 +74,7 @@ function AuthOverlay({ onClose }) {
       });
 
       localStorage.setItem("token", res.token);
+      localStorage.setItem("user", JSON.stringify(res.user));
       onClose();
       navigate("/dashboard");
     } catch (err) {
@@ -77,6 +82,39 @@ function AuthOverlay({ onClose }) {
     } finally {
       setLoading(false);
     }
+  }
+
+  // ✅ NEW: Resend OTP Handler
+  async function handleResendOtp() {
+    try {
+      setResendLoading(true);
+      setError("");
+      setSuccessMessage("");
+
+      await resendOtp(form.email);
+
+      setSuccessMessage("New OTP sent to your email!");
+      setForm({ ...form, otp: "" }); // Clear OTP input field
+      startResendCooldown(); // Start 60-second cooldown
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setResendLoading(false);
+    }
+  }
+
+  // ✅ NEW: Cooldown Timer Function
+  function startResendCooldown() {
+    setResendCooldown(60); // 60 seconds cooldown
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }
 
   return (
@@ -236,14 +274,43 @@ function AuthOverlay({ onClose }) {
                 {loading ? "Verifying..." : "Verify & Continue"}
               </button>
 
-              <p className="text-sm text-gray-400 mt-6 text-center">
-                Didn’t receive code?{" "}
-                <span className="text-amber-400 cursor-pointer hover:underline">
-                  Resend
-                </span>
-              </p>
+              {/* ✅ RESEND OTP SECTION */}
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-400 mb-2">
+                  Didn't receive the code?
+                </p>
+
+                {resendCooldown > 0 ? (
+                  <p className="text-sm text-gray-500">
+                    Resend OTP in{" "}
+                    <span className="text-amber-400 font-semibold">
+                      {resendCooldown}s
+                    </span>
+                  </p>
+                ) : (
+                  <button
+                    onClick={handleResendOtp}
+                    disabled={resendLoading}
+                    className="text-sm text-amber-400 hover:text-amber-300 font-medium hover:underline disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  >
+                    {resendLoading ? "Sending..." : "Resend OTP"}
+                  </button>
+                )}
+              </div>
+
+              <button
+                onClick={() => {
+                  setMode("signup");
+                  setError("");
+                  setSuccessMessage("");
+                }}
+                className="w-full mt-4 text-sm text-gray-400 hover:text-white transition"
+              >
+                ← Back to signup
+              </button>
             </>
           )}
+
 
           {/* FORGOT */}
           {mode === "forgot" && (

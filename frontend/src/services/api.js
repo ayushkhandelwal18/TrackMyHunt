@@ -57,6 +57,11 @@ export function loginUser(data) {
   return request("POST", "/auth/login", data);
 }
 
+//resend otp 
+export function resendOtp(email) {
+  return request("POST", "/auth/resend-otp", { email });
+}
+
 //
 // APPLICATION APIs (Protected)
 //
@@ -66,4 +71,31 @@ export function getApplications() {
 
 export function createApplication(data) {
   return request("POST", "/applications", data, true);
+}
+
+export function updateApplication(id, data) {
+  return request("PUT", `/applications/${id}`, data, true);
+}
+
+export function deleteApplication(id) {
+  return request("DELETE", `/applications/${id}`, null, true);
+}
+
+//
+// OPPORTUNITY APIs (Protected)
+//
+export function getOpportunities() {
+  return request("GET", "/opportunities", null, true);
+}
+
+export function createOpportunity(data) {
+  return request("POST", "/opportunities", data, true);
+}
+
+export function updateOpportunity(id, data) {
+  return request("PUT", `/opportunities/${id}`, data, true);
+}
+
+export function deleteOpportunity(id) {
+  return request("DELETE", `/opportunities/${id}`, null, true);
 }

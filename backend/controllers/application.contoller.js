@@ -1,19 +1,47 @@
-const service = require("../services/application.service");
+const applicationService = require("../services/application.service");
 
-exports.createApplication = async (req, res) => {
+exports.create = async (req, res) => {
   try {
-    const app = await service.createApp(req.body, req.user._id);
+    const app = await applicationService.createApplication(
+      req.user._id,
+      req.body
+    );
     res.status(201).json(app);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ message: err.message });
   }
 };
 
-exports.getApplications = async (req, res) => {
+exports.getAll = async (req, res) => {
   try {
-    const apps = await service.getApps(req.user._id);
+    const apps = await applicationService.getApplications(req.user._id);
     res.json(apps);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ message: err.message });
+  }
+};
+
+exports.update = async (req, res) => {
+  try {
+    const app = await applicationService.updateApplication(
+      req.params.id,
+      req.user._id,
+      req.body
+    );
+    res.json(app);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+exports.remove = async (req, res) => {
+  try {
+    await applicationService.deleteApplication(
+      req.params.id,
+      req.user._id
+    );
+    res.json({ message: "Application deleted" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
