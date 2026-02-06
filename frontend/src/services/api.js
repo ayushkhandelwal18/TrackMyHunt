@@ -99,3 +99,22 @@ export function updateOpportunity(id, data) {
 export function deleteOpportunity(id) {
   return request("DELETE", `/opportunities/${id}`, null, true);
 }
+
+//
+// SKILL APIs (Protected)
+//
+export function getSkills() {
+  return request("GET", "/skills", null, true);
+}
+
+export function createSkill(data) {
+  return request("POST", "/skills", data, true);
+}
+
+export function updateSkill(id, data) {
+  return request("PUT", `/skills/${id}`, data, true);
+}
+
+export function deleteSkill(id) {
+  return request("DELETE", `/skills/${id}`, null, true);
+}
