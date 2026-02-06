@@ -118,3 +118,48 @@ export function updateSkill(id, data) {
 export function deleteSkill(id) {
   return request("DELETE", `/skills/${id}`, null, true);
 }
+
+//
+// RESOURCE APIs (Protected)
+//
+export function getResources() {
+  return request("GET", "/resources", null, true);
+}
+
+export function createResource(data) {
+  return request("POST", "/resources", data, true);
+}
+
+export function updateResource(id, data) {
+  return request("PUT", `/resources/${id}`, data, true);
+}
+
+export function deleteResource(id) {
+  return request("DELETE", `/resources/${id}`, null, true);
+}
+
+//
+// NOTE APIs (Protected)
+//
+export function getNotes() {
+  return request("GET", "/notes", null, true);
+}
+
+export function createNote(data) {
+  return request("POST", "/notes", data, true);
+}
+
+export function updateNote(id, data) {
+  return request("PUT", `/notes/${id}`, data, true);
+}
+
+export function deleteNote(id) {
+  return request("DELETE", `/notes/${id}`, null, true);
+}
+
+//
+// DASHBOARD
+//
+export function getDashboardStats() {
+  return request("GET", "/dashboard", null, true);
+}
