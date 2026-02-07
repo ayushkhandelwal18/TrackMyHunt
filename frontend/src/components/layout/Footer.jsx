@@ -45,29 +45,29 @@ function Footer() {
 
         {/* Social / Contact */}
         <div>
-          <h4 className="text-gray-200 font-semibold mb-4">Connect</h4>
+          <h4 className="text-gray-200 font-semibold mb-4">Connect with me (Give your feedback)</h4>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li>Email: support@trackmyhunt.com</li>
+            <li>Email: ayushdev186@gmail.com</li>
             <li>
               <a
-                href="https://github.com"
+                href="https://x.com/ak_h2518"
                 target="_blank"
                 rel="noreferrer"
                 className="hover:text-amber-400 transition"
               >
-                GitHub
+                X(Twitter)
               </a>
             </li>
-            <li>
+            {/* <li>
               <a
-                href="https://linkedin.com"
+                href="ayushdev186@gmail.com"
                 target="_blank"
                 rel="noreferrer"
                 className="hover:text-amber-400 transition"
               >
                 LinkedIn
               </a>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

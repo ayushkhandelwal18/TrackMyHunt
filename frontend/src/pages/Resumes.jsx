@@ -101,7 +101,7 @@ function Resumes() {
             {loading ? (
                 <div className="text-center py-12 text-gray-500">Loading resumes...</div>
             ) : resumes.length === 0 ? (
-                <div className="bg-[#1e293b] rounded-xl p-12 text-center border border-dashed border-gray-700">
+                <div className="rounded-xl p-12 text-center border border-dashed border-gray-700">
                     <div className="bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
                         <FileText size={32} />
                     </div>
