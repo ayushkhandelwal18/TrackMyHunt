@@ -20,7 +20,7 @@ exports.signup = async ({ name, email, password }) => {
     exists.otpExpires = Date.now() + 10 * 60 * 1000;
     await exists.save();
 
-    await sendOTPEmail(email, otp);
+    await sendOTPEmail(email, otp, "verification");
     return { email };
   }
 
@@ -37,7 +37,7 @@ exports.signup = async ({ name, email, password }) => {
   });
 
 
-  await sendOTPEmail(email, otp);
+  await sendOTPEmail(email, otp, "verification");
   return { email: user.email, otp };
 
 };
@@ -88,7 +88,7 @@ exports.resendOtp = async ({ email }) => {
   user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
   await user.save();
 
-  await sendOTPEmail(email, otp);
+  await sendOTPEmail(email, otp, "verification");
 
   return { email, message: "OTP resent successfully" };
 };
@@ -103,12 +103,13 @@ exports.forgotPassword = async ({ email }) => {
     return { message: "If an account with this email exists, an OTP has been sent." };
   }
 
+  console.log(`[DEBUG] Processing forgotPassword for: ${email}`);
   const otp = generateOTP();
   user.otp = otp;
   user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
   await user.save();
 
-  await sendOTPEmail(email, otp);
+  await sendOTPEmail(email, otp, "reset");
 
   return { message: "If an account with this email exists, an OTP has been sent." };
 };

@@ -10,11 +10,27 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-exports.sendOTPEmail = async (to, otp) => {
+exports.sendOTPEmail = async (to, otp, type = "verification") => {
+  console.log(`[MAIL SERVICE] Sending OTP to ${to} with type: '${type}' (Length: ${type.length})`);
+
+  const isReset = type.trim().toLowerCase() === "reset";
+
+  const subject = isReset
+    ? "RESET PASSWORD - TrackMyHunt"
+    : "VERIFY ACCOUNT - TrackMyHunt";
+
+  const title = isReset
+    ? "RESET YOUR PASSWORD"
+    : "VERIFY YOUR EMAIL";
+
+  const message = isReset
+    ? "You requested to reset your password. Use the code below:"
+    : "Please verify your email address to complete registration:";
+
   const mailOptions = {
     from: `"TrackMyHunt" <${process.env.EMAIL_FROM}>`,
     to,
-    subject: "Verify your TrackMyHunt account",
+    subject,
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 40px; border-radius: 12px;">
         <div style="text-align: center; margin-bottom: 30px;">
@@ -23,8 +39,8 @@ exports.sendOTPEmail = async (to, otp) => {
         </div>
         
         <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-          <h2 style="color: #334155; font-size: 24px; font-weight: 600; margin-top: 0;">Verify Your Email</h2>
-          <p style="color: #475569; font-size: 16px; line-height: 1.6;">Thanks for starting your journey with TrackMyHunt. Please use the verification code below to complete your registration:</p>
+          <h2 style="color: #334155; font-size: 24px; font-weight: 600; margin-top: 0;">${title}</h2>
+          <p style="color: #475569; font-size: 16px; line-height: 1.6;">${message}</p>
           
           <div style="margin: 30px 0; text-align: center;">
             <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; font-size: 32px; font-weight: 700; letter-spacing: 8px; color: #0f172a; border: 2px dashed #cbd5e1; display: inline-block;">
