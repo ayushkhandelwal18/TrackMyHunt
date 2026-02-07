@@ -11,6 +11,7 @@ const skillRoutes = require("./routes/skill.routes");
 const resourceRoutes = require("./routes/resource.routes");
 const noteRoutes = require("./routes/note.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
+const resumeRoutes = require("./routes/resume.routes");
 
 app.use(cors());
 app.use(express.json())
@@ -24,6 +25,7 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/resumes", resumeRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running...");

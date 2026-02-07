@@ -1,4 +1,5 @@
 const authService = require("../services/auth.service");
+const crypto = require("crypto");
 
 exports.signup = async (req, res) => {
   try {
@@ -39,5 +40,61 @@ exports.resendOtp = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+};
+
+// Google Login
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const User = require("../models/user.model");
+const jwt = require("jsonwebtoken");
+
+exports.googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const { name, email, picture, sub } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // Link if not linked
+      if (!user.googleId) {
+        user.googleId = sub;
+        if (!user.avatar) user.avatar = picture;
+        await user.save();
+      }
+    } else {
+      // New user
+      user = await User.create({
+        name,
+        email,
+        googleId: sub,
+        avatar: picture,
+        isVerified: true,
+        password: crypto.randomBytes(20).toString('hex') // Random dummy password
+      });
+    }
+
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+
+    res.status(200).json({
+      success: true,
+      token: jwtToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        verificationStatus: user.isVerified,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Google login failed", error: error.message });
   }
 };

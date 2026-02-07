@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function CTA() {
+  const { isAuthenticated } = useAuth();
   return (
     <section id="cta" className="py-24 bg-[#0f172a]">
       <div className="max-w-5xl mx-auto px-6">
         <div className="bg-[#1e293b] border border-gray-700/60 rounded-2xl p-12 text-center">
-          
+
           <h2 className="text-3xl md:text-4xl font-bold text-gray-200">
             Start Organizing Your <span className="text-amber-400">Job Hunt</span> Today
           </h2>
@@ -17,7 +19,7 @@ function CTA() {
 
           <div className="mt-8 flex justify-center gap-4">
             <Link
-              to="/auth"
+              to={isAuthenticated ? "/dashboard" : "/auth"}
               className="bg-amber-500 text-black px-8 py-3 rounded-md font-medium hover:bg-amber-400 transition"
             >
               Get Started Free

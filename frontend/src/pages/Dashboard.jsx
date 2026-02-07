@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   Briefcase, Calendar, XCircle, Clock,
   TrendingUp, ExternalLink, Plus,
-  ArrowRight, Loader2, Zap
+  ArrowRight, Loader2, Zap, FileText
 } from "lucide-react";
 import { getDashboardStats } from "../services/api";
 
@@ -43,7 +43,7 @@ function Dashboard() {
     <div className="space-y-8">
 
       {/* 1. Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         <SummaryCard
           title="Total Applications"
           count={stats.counts.total}
@@ -67,6 +67,12 @@ function Dashboard() {
           count={stats.counts.rejected}
           icon={<XCircle size={20} />}
           color="bg-red-500/10 text-red-500 border-red-500/20"
+        />
+        <SummaryCard
+          title="Resumes Saved"
+          count={stats.counts.resumes}
+          icon={<FileText size={20} />}
+          color="bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
         />
       </div>
 
@@ -124,6 +130,9 @@ function Dashboard() {
               </Link>
               <Link to="/notes" className="block w-full text-center py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition text-sm font-medium border border-gray-700">
                 + Add Note
+              </Link>
+              <Link to="/resumes" className="block w-full text-center py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition text-sm font-medium border border-gray-700">
+                + Add Resume
               </Link>
             </div>
           </div>

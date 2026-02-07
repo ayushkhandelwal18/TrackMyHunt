@@ -57,6 +57,10 @@ export function loginUser(data) {
   return request("POST", "/auth/login", data);
 }
 
+export function googleLogin(token) {
+  return request("POST", "/auth/google", { token });
+}
+
 //resend otp 
 export function resendOtp(email) {
   return request("POST", "/auth/resend-otp", { email });
@@ -162,4 +166,24 @@ export function deleteNote(id) {
 //
 export function getDashboardStats() {
   return request("GET", "/dashboard", null, true);
+}
+
+
+//
+// RESUME APIs (Protected)
+//
+export function getResumes() {
+  return request("GET", "/resumes", null, true);
+}
+
+export function addResume(data) {
+  return request("POST", "/resumes", data, true);
+}
+
+export function deleteResume(id) {
+  return request("DELETE", `/resumes/${id}`, null, true);
+}
+
+export function updateResume(id, data) {
+  return request("PUT", `/resumes/${id}`, data, true);
 }

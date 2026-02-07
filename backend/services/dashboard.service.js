@@ -1,6 +1,7 @@
 const Application = require("../models/application.models");
 const Opportunity = require("../models/opportunity.model");
 const Skill = require("../models/skill.model");
+const Resume = require("../models/resume.model");
 
 exports.getSummary = async (userId) => {
     const [
@@ -8,6 +9,7 @@ exports.getSummary = async (userId) => {
         interviewScheduled,
         rejections,
         pendingApplications,
+        resumeCount,
         recentApplications,
         upcomingOpportunities,
         skillStats,
@@ -22,6 +24,7 @@ exports.getSummary = async (userId) => {
             user: userId,
             status: { $in: ["Applied", "Resume Shortlisted", "OA Done"] },
         }),
+        Resume.countDocuments({ user: userId }),
         Application.find({ user: userId })
             .sort({ updatedAt: -1 })
             .limit(5)
@@ -40,7 +43,8 @@ exports.getSummary = async (userId) => {
             total: totalApplications,
             interview: interviewScheduled,
             rejected: rejections,
-            pending: pendingApplications
+            pending: pendingApplications,
+            resumes: resumeCount,
         },
         recentApplications,
         upcomingOpportunities,

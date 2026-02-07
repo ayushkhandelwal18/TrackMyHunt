@@ -1,7 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import { useAuth } from "../../context/AuthContext";
 
 function ProtectedLayout() {
+    const { isAuthenticated, loading } = useAuth();
+
+    if (loading) return <div className="min-h-screen bg-[#020617] flex items-center justify-center text-amber-500">Loading...</div>;
+
+    if (!isAuthenticated) return <Navigate to="/" replace />;
+
     return (
         <div className="flex min-h-screen bg-[#020617] text-gray-100 font-poppins">
             {/* Sidebar - Fixed width */}

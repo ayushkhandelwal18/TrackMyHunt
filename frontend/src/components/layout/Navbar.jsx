@@ -1,14 +1,9 @@
 import { Link } from "react-router-dom";
 import { User, LogOut } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 function Navbar({ openAuth }) {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload();
-  };
+  const { user, logout } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-[#0f172a] border-b border-gray-700/50 z-50">
@@ -45,7 +40,7 @@ function Navbar({ openAuth }) {
                 <span className="font-semibold text-amber-400">{user.name}</span>
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="text-gray-400 hover:text-red-400 transition"
                 title="Logout"
               >
