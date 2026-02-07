@@ -9,6 +9,7 @@ import Skillboard from './pages/Skillboard';
 import Resources from './pages/Resources';
 import Notes from './pages/Notes';
 import Resumes from './pages/Resumes';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import ProtectedLayout from './components/layout/ProtectedLayout';
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/resources" element={<Resources />} />
             <Route path="/notes" element={<Notes />} />
             <Route path="/resumes" element={<Resumes />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           {/* Catch-all 404 */}

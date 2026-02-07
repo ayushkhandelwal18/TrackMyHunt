@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import dashboard from "../../assets/dashboardpreview.png"
 
 function Hero() {
   const { isAuthenticated } = useAuth();
@@ -37,8 +38,12 @@ function Hero() {
         </div>
 
         {/* Right Visual Placeholder */}
-        <div className="bg-[#1e293b] rounded-xl h-80 flex items-center justify-center text-gray-500">
-          Dashboard Preview
+        <div className="bg-[#1e293b] rounded-xl h-80 flex items-center justify-center text-gray-500 p-1">
+          <img
+            src={dashboard}
+            alt="Dashboard preview"
+            className="w-full h-full object-contain rounded-lg border-2 border-amber-400 shadow-lg shadow-amber-400"
+          />
         </div>
       </div>
     </section>

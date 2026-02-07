@@ -61,9 +61,29 @@ export function googleLogin(token) {
   return request("POST", "/auth/google", { token });
 }
 
+export function updateProfile(data) {
+  return request("PUT", "/user/profile", data, true);
+}
+
+export function changePassword(data) {
+  return request("PUT", "/user/password", data, true);
+}
+
+export function deleteAccount(data) {
+  return request("DELETE", "/user/account", data, true);
+}
+
 //resend otp 
 export function resendOtp(email) {
   return request("POST", "/auth/resend-otp", { email });
+}
+
+export function forgotPassword(email) {
+  return request("POST", "/auth/forgot-password", { email });
+}
+
+export function resetPassword(data) {
+  return request("POST", "/auth/reset-password", data);
 }
 
 //

@@ -77,6 +77,10 @@ exports.googleLogin = async (req, res) => {
         isVerified: true,
         password: crypto.randomBytes(20).toString('hex') // Random dummy password
       });
+
+      // Send Welcome Email
+      const { sendWelcomeEmail } = require("../services/mail.services");
+      await sendWelcomeEmail(user.email, user.name);
     }
 
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -96,5 +100,23 @@ exports.googleLogin = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Google login failed", error: error.message });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const result = await authService.forgotPassword(req.body);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const result = await authService.resetPassword(req.body);
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };

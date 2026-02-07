@@ -8,7 +8,8 @@ import {
     BookOpen,
     NotebookPen,
     FileText,
-    LogOut
+    LogOut,
+    User as UserIcon
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -25,6 +26,17 @@ function Sidebar() {
         { name: "Resumes", path: "/resumes", icon: FileText },
         { name: "Notes", path: "/notes", icon: NotebookPen },
     ];
+
+    // Separate profile for bottom or just add to list, user asked for "Sidebar (bottom)"
+    // If we want it strictly at bottom, we can separate it. 
+    // "Add a Profile section in the sidebar (bottom)"
+    // I will add it to the menu items for now, as the sidebar implementation iterates over menuItems.
+    // Or I can add a specific section for Profile below the main nav.
+    // Let's add it to the list but maybe at the end or separate?
+    // User said "in the sidebar (bottom)".
+    // I will look at the Sidebar code again. It has a "Menu" section.
+    // I'll add a separate section for "Account".
+
 
     return (
         <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0f172a] text-gray-300 border-r border-gray-700/50 flex flex-col z-50">
@@ -55,6 +67,20 @@ function Sidebar() {
                             </Link>
                         );
                     })}
+                </div>
+
+                <div className="pt-2 pb-2">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 mb-2">Account</div>
+                    <Link
+                        to="/profile"
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${location.pathname === "/profile"
+                            ? "bg-amber-500/10 text-amber-400 font-semibold shadow-sm border border-amber-500/20"
+                            : "text-gray-400 hover:bg-gray-800 hover:text-amber-400"
+                            }`}
+                    >
+                        <UserIcon size={20} />
+                        <span className="font-medium">Profile</span>
+                    </Link>
                 </div>
             </nav>
 

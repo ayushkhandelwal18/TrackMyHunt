@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { X, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { signupUser, verifyOtp, loginUser, resendOtp, googleLogin } from "../../services/api";
+import { signupUser, verifyOtp, loginUser, resendOtp, googleLogin, forgotPassword, resetPassword } from "../../services/api";
 import { GoogleLogin } from "@react-oauth/google";
 
 function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
   const [mode, setMode] = useState(initialMode); // 'login', 'signup', 'verify'
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,6 +33,7 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
       const data = await googleLogin(credentialResponse.credential);
       login(data.user, data.token);
       if (!isStandalone && onClose) onClose();
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Google Login Failed");
     } finally {
@@ -51,6 +54,7 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
 
       login(res.user, res.token);
       if (!isStandalone && onClose) onClose();
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -91,6 +95,7 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
 
       login(res.user, res.token);
       if (!isStandalone && onClose) onClose();
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -242,6 +247,7 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
                     onError={() => setError("Google Login Failed")}
                     theme="filled_black"
                     shape="pill"
+                    text="signin_with"
                     width="300"
                   />
                 </div>
@@ -345,6 +351,7 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
                     onError={() => setError("Google Login Failed")}
                     theme="filled_black"
                     shape="pill"
+                    text="signup_with"
                     width="300"
                   />
                 </div>
@@ -429,16 +436,135 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
           )}
 
           {/* FORGOT PASSWORD (Placeholder) */}
+          {/* FORGOT PASSWORD */}
           {mode === "forgot" && (
             <>
               <h2 className="text-3xl font-bold mb-2 text-white">Reset Password</h2>
-              <p className="text-gray-400 mb-8">Feature coming soon.</p>
+              <p className="text-gray-400 mb-8">Enter your email to receive a reset code</p>
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError("");
+                try {
+                  await forgotPassword(formData.email);
+                  setMode("reset");
+                } catch (err) {
+                  setError(err.message);
+                } finally {
+                  setLoading(false);
+                }
+              }} className="space-y-4">
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3.5 text-gray-500" size={20} />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full pl-10 p-3 rounded-xl bg-[#0f172a] border border-gray-700 text-gray-200 focus:border-amber-500 focus:outline-none transition"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-3 px-4 rounded-xl transition duration-300 transform hover:scale-[1.02] shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 size={20} className="animate-spin" /> : "Send Reset Code"}
+                </button>
+              </form>
+
               <button
-                onClick={() => setMode("login")}
-                className="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-3 px-4 rounded-xl transition"
+                onClick={() => {
+                  setMode("login");
+                  setError("");
+                }}
+                className="w-full mt-6 text-sm text-gray-500 hover:text-gray-300 transition flex items-center justify-center gap-1"
               >
-                Back to Login
+                ← Back to Login
               </button>
+            </>
+          )}
+
+          {/* RESET PASSWORD */}
+          {mode === "reset" && (
+            <>
+              <h2 className="text-3xl font-bold mb-2 text-white">Set New Password</h2>
+              <p className="text-gray-400 mb-8">Enter the code sent to {formData.email}</p>
+
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError("");
+                try {
+                  await resetPassword({
+                    email: formData.email,
+                    otp: formData.otp,
+                    newPassword: formData.password
+                  });
+                  setSuccessMessage("Password reset successfully! Please login.");
+                  setMode("login");
+                } catch (err) {
+                  setError(err.message);
+                } finally {
+                  setLoading(false);
+                }
+              }} className="space-y-4">
+                <div className="relative">
+                  <span className="absolute left-3 top-3.5 text-gray-500 font-mono tracking-widest">OTP</span>
+                  <input
+                    type="text"
+                    name="otp"
+                    placeholder="000000"
+                    maxLength="6"
+                    value={formData.otp}
+                    onChange={handleChange}
+                    className="w-full pl-12 p-3 rounded-xl bg-[#0f172a] border border-gray-700 text-gray-200 focus:border-amber-500 focus:outline-none transition font-mono tracking-widest"
+                    required
+                  />
+                </div>
+
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3.5 text-gray-500" size={20} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="New Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full pl-10 pr-10 p-3 rounded-xl bg-[#0f172a] border border-gray-700 text-gray-200 focus:border-amber-500 focus:outline-none transition"
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3.5 text-gray-500 hover:text-gray-300"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-3 px-4 rounded-xl transition duration-300 transform hover:scale-[1.02] shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 size={20} className="animate-spin" /> : "Reset Password"}
+                </button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setMode("forgot")}
+                  className="text-sm text-amber-400 hover:text-amber-300 hover:underline"
+                >
+                  Resend Code?
+                </button>
+              </div>
             </>
           )}
 
