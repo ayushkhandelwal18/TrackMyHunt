@@ -13,11 +13,32 @@ const noteRoutes = require("./routes/note.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const resumeRoutes = require("./routes/resume.routes");
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "https://trackmyhunt.vercel.app",
+  "http://localhost:5173", // Common Vite development port
+  "http://localhost:3000"
+].filter(Boolean); // Remove undefined/null if CLIENT_URL is not set
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || "*",
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    const isAllowed = allowedOrigins.includes(origin) ||
+      origin.endsWith(".vercel.app") || // Allow Vercel previews
+      origin.includes("localhost");
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.error(`[CORS ERROR] Origin ${origin} not allowed`);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
 };
 
 app.use(cors(corsOptions));
