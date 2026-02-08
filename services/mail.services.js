@@ -1,127 +1,67 @@
-const nodemailer = require("nodemailer");
+const axios = require("axios");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // Use SSL/TLS
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000, // 10 seconds timeout
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+/**
+ * Sends an email using EmailJS REST API
+ * @param {string} to - Recipient email
+ * @param {Object} templateParams - Parameters for the EmailJS template
+ * @param {string} templateId - EmailJS Template ID
+ */
+const sendEmailJS = async (to, templateParams, templateId) => {
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
-exports.sendOTPEmail = async (to, otp, type = "verification") => {
-  console.log(`[MAIL SERVICE] Preparing OTP email for ${to} | Type: ${type}`);
-
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.error("[MAIL SERVICE ERROR] Missing EMAIL_USER or EMAIL_PASS in environment variables");
+  if (!serviceId || !templateId || !publicKey) {
+    console.error("[MAIL SERVICE ERROR] Missing EmailJS configuration in environment variables");
     throw new Error("Email service is not configured correctly on the server.");
   }
 
-  const isReset = type.trim().toLowerCase() === "reset";
-  const subject = isReset ? "RESET PASSWORD - TrackMyHunt" : "VERIFY ACCOUNT - TrackMyHunt";
-  const title = isReset ? "RESET YOUR PASSWORD" : "VERIFY YOUR EMAIL";
-  const message = isReset
-    ? "You requested to reset your password. Use the code below:"
-    : "Please verify your email address to complete registration:";
-
-  const mailOptions = {
-    from: `"TrackMyHunt" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html: `
-      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h2 style="color: #0f172a; font-size: 28px; font-weight: 700; margin: 0;">TrackMyHunt</h2>
-          <p style="color: #64748b; font-size: 16px; margin-top: 8px;">Your Job Hunt Companion</p>
-        </div>
-        
-        <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-          <h2 style="color: #334155; font-size: 24px; font-weight: 600; margin-top: 0;">${title}</h2>
-          <p style="color: #475569; font-size: 16px; line-height: 1.6;">${message}</p>
-          
-          <div style="margin: 30px 0; text-align: center;">
-            <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; font-size: 32px; font-weight: 700; letter-spacing: 8px; color: #0f172a; border: 2px dashed #cbd5e1; display: inline-block;">
-              ${otp}
-            </div>
-          </div>
-          
-          <p style="color: #64748b; font-size: 14px; text-align: center;">This code will expire in <strong>10 minutes</strong>.</p>
-          <div style="border-top: 1px solid #e2e8f0; margin: 30px 0;"></div>
-          <p style="color: #94a3b8; font-size: 13px; text-align: center; margin-bottom: 0;">If you didn't request this code, please ignore this email.</p>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-          <p style="color: #94a3b8; font-size: 12px;">&copy; ${new Date().getFullYear()} TrackMyHunt. All rights reserved.</p>
-        </div>
-      </div>
-    `,
+  const data = {
+    service_id: serviceId,
+    template_id: templateId,
+    user_id: publicKey,
+    accessToken: privateKey, // Required for server-side requests
+    template_params: {
+      to_email: to,
+      ...templateParams
+    },
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`[MAIL SERVICE] OTP Email sent successfully to ${to}. MessageId: ${info.messageId}`);
-    return info;
+    const response = await axios.post("https://api.emailjs.com/api/v1.0/email/send", data);
+    console.log(`[MAIL SERVICE] Email sent successfully to ${to}. Status: ${response.status}`);
+    return response.data;
   } catch (error) {
-    console.error(`[MAIL SERVICE ERROR] Full Error Object:`, JSON.stringify(error, null, 2));
-    console.error(`[MAIL SERVICE ERROR] Failed to send OTP email to ${to}:`, error.message);
-
-    if (error.code === 'EAUTH') {
-      throw new Error("Email authentication failed. Please check server configuration.");
-    } else if (error.code === 'ETIMEDOUT') {
-      throw new Error("Connection to mail server timed out. Please try again later.");
-    }
-
-    throw new Error("Failed to send verification email. Please try again later.");
+    console.error(`[MAIL SERVICE ERROR] EmailJS request failed:`, error.response ? error.response.data : error.message);
+    throw new Error("Failed to send email via EmailJS. Please try again later.");
   }
 };
 
-exports.sendWelcomeEmail = async (to, name) => {
-  console.log(`[MAIL SERVICE] Preparing Welcome email for ${to}`);
+exports.sendOTPEmail = async (to, otp, type = "verification") => {
+  console.log(`[MAIL SERVICE] Preparing EmailJS OTP for ${to} | Type: ${type}`);
 
-  const mailOptions = {
-    from: `"TrackMyHunt" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-    to,
-    subject: "Welcome to TrackMyHunt! 🚀",
-    html: `
-      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h2 style="color: #0f172a; font-size: 28px; font-weight: 700; margin: 0;">TrackMyHunt</h2>
-        </div>
-        
-        <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-          <h2 style="color: #334155; font-size: 24px; font-weight: 600; margin-top: 0;">Welcome aboard, ${name}! 🎉</h2>
-          <p style="color: #475569; font-size: 16px; line-height: 1.6;">We're thrilled to have you. TrackMyHunt is designed to help you organize your job applications, track interviews, and land your dream job.</p>
-          
-          <div style="margin: 30px 0; background-color: #fffbeb; padding: 20px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-            <h3 style="color: #b45309; margin: 0 0 10px 0; font-size: 18px;">Quick Tips to Get Started:</h3>
-            <ul style="color: #78350f; margin: 0; padding-left: 20px; font-size: 15px;">
-              <li style="margin-bottom: 8px;">Add your first job application to the board.</li>
-              <li style="margin-bottom: 8px;">Upload your resume for AI analysis.</li>
-              <li style="margin-bottom: 0;">Set up your profile to get personalized insights.</li>
-            </ul>
-          </div>
-          
-          <div style="text-align: center; margin-top: 30px;">
-            <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}/dashboard" style="background-color: #0f172a; color: #ffffff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; display: inline-block;">Go to Dashboard</a>
-          </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-          <p style="color: #94a3b8; font-size: 12px;">Happy Hunting! 🎯<br>&copy; ${new Date().getFullYear()} TrackMyHunt</p>
-        </div>
-      </div>
-    `,
+  const isReset = type.trim().toLowerCase() === "reset";
+
+  const templateParams = {
+    otp: otp,
+    type: isReset ? "Password Reset" : "Account Verification",
+    subject: isReset ? "RESET PASSWORD - TrackMyHunt" : "VERIFY ACCOUNT - TrackMyHunt"
   };
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`[MAIL SERVICE] Welcome Email sent successfully to ${to}. MessageId: ${info.messageId}`);
-    return info;
-  } catch (error) {
-    console.error(`[MAIL SERVICE ERROR] Failed to send Welcome email to ${to}:`, error);
-  }
+  // Note: You must create a template in EmailJS and use its ID here.
+  // I'm using the ID from .env
+  return await sendEmailJS(to, templateParams, process.env.EMAILJS_TEMPLATE_ID);
+};
+
+exports.sendWelcomeEmail = async (to, name) => {
+  console.log(`[MAIL SERVICE] Preparing EmailJS Welcome for ${to}`);
+
+  const templateParams = {
+    user_name: name,
+    subject: "Welcome to TrackMyHunt! 🚀"
+  };
+
+  // Usually you'd have a different template for welcome emails
+  // For now, I'll use a separate placeholder if you have one, or provide instructions
+  return await sendEmailJS(to, templateParams, process.env.EMAILJS_WELCOME_TEMPLATE_ID );
 };
