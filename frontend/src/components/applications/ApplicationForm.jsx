@@ -5,7 +5,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
     const [formData, setFormData] = useState({
         company: "",
         role: "",
-        type: "Job",
+        type: "Full-Time",
         status: "Applied",
         applicationLink: "",
         skills: "",
@@ -24,7 +24,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
             setFormData({
                 company: "",
                 role: "",
-                type: "Job",
+                type: "Full-Time",
                 status: "Applied",
                 applicationLink: "",
                 skills: "",
@@ -102,11 +102,11 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                                     onChange={handleChange}
                                     className="w-full bg-[#0f172a] border border-gray-700 rounded-lg px-4 py-3 text-gray-100 focus:outline-none focus:border-amber-500 transition appearance-none"
                                 >
-                                    <option value="Job">Job</option>
                                     <option value="Intern">Intern</option>
+                                    <option value="Full-Time">Full-Time</option>
                                     <option value="Remote">Remote</option>
                                     <option value="Freelance">Freelance</option>
-                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="Intern + Offer">Intern + Offer</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>

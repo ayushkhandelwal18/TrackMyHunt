@@ -22,10 +22,10 @@ const opportunitySchema = new mongoose.Schema(
             required: true,
             enum: [
                 "Intern",
-                "Full-time",
+                "Full-Time",
                 "Remote",
                 "Freelance",
-                "Hybrid",
+                "Intern + Offer",
                 "Other",
             ],
         },

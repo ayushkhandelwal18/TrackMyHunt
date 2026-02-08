@@ -20,14 +20,14 @@ const applicationSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: [
-        "Intern",
-        "Job",
-        "Remote",
-        "Freelance",
-        "Hybrid",
-        "Other",
-      ],
+    enum: [
+  "Intern",
+  "Full-Time",
+  "Remote",
+  "Freelance",
+  "Intern + Offer",
+  "Other",
+]
     },
     skills: {
       type: String,
