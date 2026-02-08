@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from '../components/layout/Navbar'
-import Hero from '../components/landing/hero'
-import Features from '../components/landing/features'
+import Hero from '../components/landing/Hero'
+import Features from '../components/landing/Features'
 import HowItWorks from '../components/landing/HowITWorks'
 import Testimonials from '../components/landing/Testimonials'
 import CTA from '../components/landing/CTA'
