@@ -1,7 +1,8 @@
 // Ye file frontend ka gateway hai backend ke liye.
 // Components kabhi direct fetch() / axios() use nahi karte — sab yahin se hota hai
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = `${import.meta.env.VITE_BASE_BACKEND_URL}/api`;
+
 
 //token handling
 //Har protected request me token auto-attach hona chahiye.
