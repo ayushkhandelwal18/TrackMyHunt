@@ -43,6 +43,11 @@ async function request(method, endpoint, data = null, isAuth = false) {
   return result;
 }
 
+// Wake up the server (Cold Start Mitigation)
+export function wakeUpServer() {
+  return fetch(`${BASE_URL}/`);
+}
+
 //
 // AUTH APIs
 //

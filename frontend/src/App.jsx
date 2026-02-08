@@ -13,7 +13,14 @@ import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import ProtectedLayout from './components/layout/ProtectedLayout';
 
+import { useEffect } from 'react';
+import { wakeUpServer } from './services/api';
+
 function App() {
+  useEffect(() => {
+    wakeUpServer();
+  }, []);
+
   return (
     <AuthProvider>
       <Router>

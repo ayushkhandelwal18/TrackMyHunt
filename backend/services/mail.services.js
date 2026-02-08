@@ -60,7 +60,14 @@ exports.sendOTPEmail = async (to, otp, type = "verification") => {
     `,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[MAIL SERVICE] OTP Email sent successfully to ${to}. MessageId: ${info.messageId}`);
+    return info;
+  } catch (error) {
+    console.error(`[MAIL SERVICE ERROR] Failed to send OTP email to ${to}:`, error);
+    throw new Error("Failed to send verification email. Please try again later.");
+  }
 };
 
 exports.sendWelcomeEmail = async (to, name) => {
@@ -99,5 +106,12 @@ exports.sendWelcomeEmail = async (to, name) => {
     `,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[MAIL SERVICE] Welcome Email sent successfully to ${to}. MessageId: ${info.messageId}`);
+    return info;
+  } catch (error) {
+    console.error(`[MAIL SERVICE ERROR] Failed to send Welcome email to ${to}:`, error);
+    // Don't throw for welcome email, just log it
+  }
 };

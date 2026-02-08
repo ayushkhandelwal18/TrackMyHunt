@@ -14,7 +14,7 @@ const dashboardRoutes = require("./routes/dashboard.routes");
 const resumeRoutes = require("./routes/resume.routes");
 
 const corsOptions = {
-  origin: process.env.CLIENT_URL || "*", 
+  origin: process.env.CLIENT_URL || "*",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -36,7 +36,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/resumes", resumeRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API Running...");
+  res.status(200).json({ message: "API is running successfully", timestamp: new Date().toISOString() });
 });
 
 module.exports = app
