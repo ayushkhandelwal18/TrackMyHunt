@@ -1,14 +1,10 @@
-
-const dotenv =require("dotenv")
-const app= require("./app");
-
-
-const connectDatabase=require("./config/database")
-
-//config
+const dotenv = require("dotenv");
 dotenv.config();
 
-//CONNECTING TO DATABASE
+const app = require("./app");
+const connectDatabase = require("./config/database");
+
+// CONNECTING TO DATABASE
 connectDatabase();
 
 
