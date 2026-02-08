@@ -13,11 +13,12 @@ function Testimonials() {
         "The opportunities planner made my prep month-wise. I felt more confident before hiring season.",
     },
     {
-      name: "Rohit Sharma",
+      name: "Rohit Saini",
       role: "Backend Developer",
       quote:
         "Saving resources and notes in one place changed how I prepare for interviews.",
     },
+
   ];
 
   return (

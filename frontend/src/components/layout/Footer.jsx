@@ -5,7 +5,7 @@ function Footer() {
     <footer className="bg-[#0f172a] border-t border-gray-700/50 py-12">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        {/* Brand */}
+       
         <div>
           <h3 className="text-xl font-bold text-gray-200">
             TrackMy<span className="text-amber-400">Hunt</span>
@@ -16,7 +16,7 @@ function Footer() {
           </p>
         </div>
 
-        {/* Links */}
+       
         <div>
           <h4 className="text-gray-200 font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2 text-sm">
@@ -43,7 +43,7 @@ function Footer() {
           </ul>
         </div>
 
-        {/* Social / Contact */}
+     
         <div>
           <h4 className="text-gray-200 font-semibold mb-4">Connect with me (Give your feedback)</h4>
           <ul className="space-y-2 text-sm text-gray-400">
@@ -72,7 +72,7 @@ function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
+      
       <div className="mt-10 text-center text-gray-500 text-sm">
         © {new Date().getFullYear()} TrackMyHunt. All rights reserved.
       </div>

@@ -77,7 +77,7 @@ exports.deleteResume = async (req, res) => {
             return res.status(404).json({ message: "Resume not found" });
         }
 
-        // Ensure user owns the resume
+       
         if (resume.user.toString() !== req.user.id) {
             return res.status(401).json({ message: "Not authorized to delete this resume" });
         }

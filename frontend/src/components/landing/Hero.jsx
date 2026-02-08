@@ -37,7 +37,7 @@ function Hero() {
           </div>
         </div>
 
-        {/* Right Visual Placeholder */}
+        
         <div className="bg-[#1e293b] rounded-xl h-80 flex items-center justify-center text-gray-500 p-1">
           <img
             src={dashboard}

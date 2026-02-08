@@ -29,8 +29,8 @@ exports.getSummary = async (userId) => {
             .sort({ updatedAt: -1 })
             .limit(5)
             .select("company role status updatedAt"),
-        Opportunity.find({ user: userId }) // Simple logic: just get all and filter/sort in frontend or here. Let's just get next 5.
-            .sort({ openingYear: 1, openingMonth: 1 }) // improved sorting needed realistically but string months make it hard. Just basic sort for now.
+        Opportunity.find({ user: userId }) 
+            .sort({ openingYear: 1, openingMonth: 1 }) 
             .limit(5),
         Skill.aggregate([
             { $match: { user: userId } },

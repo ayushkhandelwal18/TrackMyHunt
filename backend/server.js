@@ -1,4 +1,4 @@
-//This file serves as the main entry point, where the server is started.
+
 const dotenv =require("dotenv")
 const app= require("./app");
 

@@ -36,14 +36,14 @@ exports.deleteAccount = async (userId, { password }) => {
     const user = await User.findById(userId);
     if (!user) throw new Error("User not found");
 
-    // If user has a password (not Google-only), verify it
+    
     if (user.password) {
         if (!password) throw new Error("Password required to delete account");
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) throw new Error("Incorrect password");
     }
 
-    // Cascade delete
+    
     await Promise.all([
         Application.deleteMany({ userId }),
         Opportunity.deleteMany({ userId }),

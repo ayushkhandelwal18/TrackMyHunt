@@ -13,7 +13,7 @@ const skillSchema = new mongoose.Schema(
             trim: true,
         },
         category: {
-            type: String, // Frontend, Backend, Tools, Soft Skills
+            type: String, 
             required: true,
             default: "Other",
         },
@@ -23,7 +23,7 @@ const skillSchema = new mongoose.Schema(
             enum: ["Beginner", "Intermediate", "Advanced", "Expert"],
         },
         target: {
-            type: String, // Notes for improvement
+            type: String,
         },
     },
     { timestamps: true }

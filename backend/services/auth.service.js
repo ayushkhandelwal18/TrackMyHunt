@@ -97,9 +97,7 @@ exports.forgotPassword = async ({ email }) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    // For security, don't reveal if user exists, but for dev/UX now we might return vague message or just succeed
-    // Requirement: "Do not reveal if email is registered"
-    // So we should just pretend we sent it.
+
     return { message: "If an account with this email exists, an OTP has been sent." };
   }
 
@@ -117,7 +115,7 @@ exports.forgotPassword = async ({ email }) => {
 exports.resetPassword = async ({ email, otp, newPassword }) => {
   const user = await User.findOne({ email });
 
-  if (!user) throw new Error("Invalid request"); // Generic error
+  if (!user) throw new Error("Invalid request"); 
   if (user.otp !== otp) throw new Error("Invalid OTP");
   if (user.otpExpires < Date.now()) throw new Error("OTP expired");
 
@@ -125,9 +123,6 @@ exports.resetPassword = async ({ email, otp, newPassword }) => {
   user.password = hashed;
   user.otp = null;
   user.otpExpires = null;
-  // Invalidate sessions: Since we don't track sessions in DB, we rely on password change.
-  // Ideally we would update a 'passwordChangedAt' field and check it in middleware, but for now this is sufficient for the scope.
-  // The requirement "Do not reveal if email is registered" was for the forgot password initiation.
 
   await user.save();
 

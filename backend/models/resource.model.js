@@ -13,7 +13,7 @@ const resourceSchema = new mongoose.Schema(
             trim: true,
         },
         type: {
-            type: String, // YouTube, Blog, Article, Course, Website
+            type: String, 
             required: true,
             enum: ["YouTube", "Blog", "Article", "Course", "Website"],
         },
@@ -23,7 +23,7 @@ const resourceSchema = new mongoose.Schema(
             trim: true,
         },
         relatedSkills: {
-            type: String, // e.g., "DSA, React"
+            type: String, 
         },
         description: {
             type: String,

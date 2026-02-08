@@ -24,7 +24,7 @@ function ProtectedLayout() {
             </button>
 
             {/* Sidebar - Fixed width */}
-            {/* We pass isOpen and onClose to control mobile visibility */}
+            
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             {/* Overlay for mobile when sidebar is open */}
@@ -36,7 +36,7 @@ function ProtectedLayout() {
             )}
 
             {/* Main Content Area */}
-            {/* Added md:ml-64 to only have margin on desktop. Mobile has no margin as sidebar overlays. */}
+            
             <div className="flex-1 md:ml-64 p-8 overflow-y-auto w-full transition-all duration-300">
                 <div className="max-w-7xl mx-auto">
                     <Outlet />

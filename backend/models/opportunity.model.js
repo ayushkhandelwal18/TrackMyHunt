@@ -30,10 +30,10 @@ const opportunitySchema = new mongoose.Schema(
             ],
         },
         openingMonth: {
-            type: String, // e.g., "August"
+            type: String, 
         },
         openingYear: {
-            type: Number, // e.g., 2026
+            type: Number, 
         },
         skills: {
             type: String,

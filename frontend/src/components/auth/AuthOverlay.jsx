@@ -134,14 +134,11 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
     }, 1000);
   }
 
-  // If standalone page, we might want to center differently or hide close button
-  // existing layout logic seems fine, using isStandalone for onClose check
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm ${isStandalone ? 'bg-[#020617]' : ''}`}>
       <div className="bg-[#0f172a] w-[900px] max-w-[95%] rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 relative shadow-2xl border border-gray-800">
 
-        {/* Close Button - Only if not standalone */}
         {!isStandalone && onClose && (
           <button
             onClick={onClose}
@@ -435,8 +432,7 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
             </>
           )}
 
-          {/* FORGOT PASSWORD (Placeholder) */}
-          {/* FORGOT PASSWORD */}
+
           {mode === "forgot" && (
             <>
               <h2 className="text-3xl font-bold mb-2 text-white">Reset Password</h2>
@@ -570,10 +566,10 @@ function AuthOverlay({ onClose, initialMode = "login", isStandalone = false }) {
 
         </div>
 
-        {/* RIGHT PANEL - BRANDING */}
+
         <div className="hidden md:flex flex-col justify-center p-12 bg-gradient-to-br from-[#020617] to-[#1e293b] text-white relative overflow-hidden">
 
-          {/* Decorative Elements */}
+
           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -ml-16 -mb-16"></div>
 

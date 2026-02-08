@@ -11,7 +11,7 @@ function Navbar({ openAuth }) {
     <nav className="fixed top-0 left-0 w-full bg-[#0f172a] border-b border-gray-700/50 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
-        {/* Logo */}
+        
         <Link to="/" className="text-xl font-bold tracking-wide text-gray-200" onClick={() => setIsOpen(false)}>
           TrackMy<span className="text-amber-400">Hunt</span>
         </Link>

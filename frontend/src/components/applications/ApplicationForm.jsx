@@ -50,7 +50,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
             <div className="bg-[#1e293b] w-full max-w-2xl rounded-2xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
-                {/* Header */}
+                
                 <div className="p-6 border-b border-gray-700 flex justify-between items-center bg-[#0f172a]">
                     <h2 className="text-xl font-bold text-gray-100">
                         {initialData ? "Edit Application" : "Add New Application"}
@@ -60,11 +60,11 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                     </button>
                 </div>
 
-                {/* Scrollable Form Body */}
+                
                 <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
                     <form id="app-form" onSubmit={handleSubmit} className="space-y-6">
 
-                        {/* Row 1: Company & Role */}
+                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-2">Company Name *</label>
@@ -92,7 +92,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                             </div>
                         </div>
 
-                        {/* Row 2: Type, Status, Date */}
+                        
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-2">Type</label>
@@ -142,7 +142,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                             </div>
                         </div>
 
-                        {/* Application Link */}
+                        
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Application Link</label>
                             <input
@@ -155,7 +155,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                             />
                         </div>
 
-                        {/* Skills */}
+                        
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Skills (comma separated)</label>
                             <input
@@ -168,7 +168,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                             />
                         </div>
 
-                        {/* Notes */}
+                        
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Notes</label>
                             <textarea
@@ -184,7 +184,7 @@ function ApplicationForm({ isOpen, onClose, onSubmit, initialData = null, loadin
                     </form>
                 </div>
 
-                {/* Footer */}
+                
                 <div className="p-6 border-t border-gray-700 bg-[#0f172a] flex justify-end gap-3">
                     <button
                         type="button"

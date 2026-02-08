@@ -13,11 +13,11 @@ const noteSchema = new mongoose.Schema(
             trim: true,
         },
         content: {
-            type: String, // long text
+            type: String, 
             required: true,
         },
         tags: {
-            type: String, // e.g., "DSA, Interview"
+            type: String, 
         },
         date: {
             type: Date,
