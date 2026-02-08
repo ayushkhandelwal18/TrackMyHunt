@@ -1,15 +1,25 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // Use SSL/TLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  connectionTimeout: 10000, // 10 seconds timeout
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
 });
 
 exports.sendOTPEmail = async (to, otp, type = "verification") => {
   console.log(`[MAIL SERVICE] Preparing OTP email for ${to} | Type: ${type}`);
+
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error("[MAIL SERVICE ERROR] Missing EMAIL_USER or EMAIL_PASS in environment variables");
+    throw new Error("Email service is not configured correctly on the server.");
+  }
 
   const isReset = type.trim().toLowerCase() === "reset";
   const subject = isReset ? "RESET PASSWORD - TrackMyHunt" : "VERIFY ACCOUNT - TrackMyHunt";
@@ -19,7 +29,7 @@ exports.sendOTPEmail = async (to, otp, type = "verification") => {
     : "Please verify your email address to complete registration:";
 
   const mailOptions = {
-    from: `"TrackMyHunt" <${process.env.EMAIL_FROM}>`,
+    from: `"TrackMyHunt" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
     to,
     subject,
     html: `
@@ -56,7 +66,15 @@ exports.sendOTPEmail = async (to, otp, type = "verification") => {
     console.log(`[MAIL SERVICE] OTP Email sent successfully to ${to}. MessageId: ${info.messageId}`);
     return info;
   } catch (error) {
-    console.error(`[MAIL SERVICE ERROR] Failed to send OTP email to ${to}:`, error);
+    console.error(`[MAIL SERVICE ERROR] Full Error Object:`, JSON.stringify(error, null, 2));
+    console.error(`[MAIL SERVICE ERROR] Failed to send OTP email to ${to}:`, error.message);
+
+    if (error.code === 'EAUTH') {
+      throw new Error("Email authentication failed. Please check server configuration.");
+    } else if (error.code === 'ETIMEDOUT') {
+      throw new Error("Connection to mail server timed out. Please try again later.");
+    }
+
     throw new Error("Failed to send verification email. Please try again later.");
   }
 };
@@ -65,7 +83,7 @@ exports.sendWelcomeEmail = async (to, name) => {
   console.log(`[MAIL SERVICE] Preparing Welcome email for ${to}`);
 
   const mailOptions = {
-    from: `"TrackMyHunt" <${process.env.EMAIL_FROM}>`,
+    from: `"TrackMyHunt" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
     to,
     subject: "Welcome to TrackMyHunt! 🚀",
     html: `
