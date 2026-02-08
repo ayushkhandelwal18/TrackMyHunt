@@ -1,10 +1,10 @@
 require("dotenv").config();
 const { Resend } = require("resend");
 
-const resendApiKey = process.env.resend_api_email;
+const resendApiKey = process.env.RESEND_API_KEY;
 
 if (!resendApiKey) {
-  console.error("❌ FATAL: Resend API Key (resend_api_email) is missing in environment variables!");
+  console.error("❌ FATAL: Resend API Key (RESEND_API_KEY) is missing in environment variables!");
 }
 
 const resend = new Resend(resendApiKey);
@@ -55,8 +55,8 @@ exports.sendOTPEmail = async (to, otp, type = "verification") => {
 
   try {
     const data = await resend.emails.send({
-      from: process.env.EMAIL_FROM || "onboarding@resend.dev", // Fallback for testing
-      to: [to], // Resend expects an array
+      from: "TrackMyHunt <onboarding@resend.dev>", 
+      to: [to], 
       subject: subject,
       html: htmlContent,
     });
