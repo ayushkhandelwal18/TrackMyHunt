@@ -45,7 +45,7 @@ async function request(method, endpoint, data = null, isAuth = false) {
 
 // Wake up the server (Cold Start Mitigation)
 export function wakeUpServer() {
-  return fetch(`${BASE_URL}/`);
+  return fetch(`${import.meta.env.VITE_BASE_BACKEND_URL}/`);
 }
 
 //
